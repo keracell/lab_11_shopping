@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lab_11_shopping/api/api.dart';
 import 'package:lab_11_shopping/models/grocery_item_model.dart';
 import 'package:lab_11_shopping/widgets/new_item.dart';
 
@@ -10,7 +11,14 @@ class GroceryList extends StatefulWidget {
 }
 
 class _GroceryListState extends State<GroceryList> {
-  final List<GroceryItem> _groceryItems = [];
+  List<GroceryItem> _groceryItems = [];
+
+  void _getItems() async {
+    final items = await shoppingApi.getAll();
+    setState(() {
+      _groceryItems = items;
+    });
+  }
 
   void _addItem() async {
     final newItem = await Navigator.of(
@@ -24,10 +32,23 @@ class _GroceryListState extends State<GroceryList> {
     });
   }
 
-  void _removeItem(GroceryItem item) {
+  void _removeItem(GroceryItem item) async {
+    final index = _groceryItems.indexOf(item);
     setState(() {
       _groceryItems.remove(item);
     });
+
+    if (!await shoppingApi.remove(item.id)) {
+      setState(() {
+        _groceryItems.insert(index, item);
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getItems();
   }
 
   @override

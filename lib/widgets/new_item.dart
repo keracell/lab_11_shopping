@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lab_11_shopping/api/api.dart';
 import 'package:lab_11_shopping/data/categories.dart';
 import 'package:lab_11_shopping/models/category_model.dart';
-import 'package:lab_11_shopping/models/grocery_item_model.dart';
 
 class NewItem extends StatefulWidget {
   const NewItem({super.key});
@@ -10,23 +10,24 @@ class NewItem extends StatefulWidget {
   State<NewItem> createState() => _NewItemState();
 }
 
+const projectId = 'flutter-test-89865';
+
 class _NewItemState extends State<NewItem> {
   final _formKey = GlobalKey<FormState>();
   var _itemName = '';
   var _itemQuantity = 1;
   Category _itemCategory = categories[Categories.vegetables]!;
 
-  void _saveItem() {
+  void _saveItem() async {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
-    Navigator.of(context).pop(
-      GroceryItem(
-        id: DateTime.now().toString(),
-        name: _itemName,
-        quantity: _itemQuantity,
-        category: _itemCategory,
-      ),
+    final result = await shoppingApi.add(
+      _itemName,
+      _itemQuantity,
+      _itemCategory.title,
     );
+    if (!context.mounted) return;
+    Navigator.of(context).pop(result);
   }
 
   @override

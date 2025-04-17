@@ -4,6 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:lab_11_shopping/data/categories.dart';
 import 'package:lab_11_shopping/models/category_model.dart';
 import 'package:lab_11_shopping/models/grocery_item_model.dart';
+import 'package:lab_11_shopping/api/config.dart';
+
+final database = 'shopping-list';
 
 Category getCategoryByTitle(String title) {
   return categories[Categories.values.firstWhere(
@@ -12,9 +15,6 @@ Category getCategoryByTitle(String title) {
 }
 
 class ShoppingApi {
-  final baseUrl = 'flutter-test-89865-default-rtdb.firebaseio.com';
-  final database = 'shopping-list';
-
   Future<List<GroceryItem>> getAll() async {
     final url = Uri.https(baseUrl, '$database.json');
 

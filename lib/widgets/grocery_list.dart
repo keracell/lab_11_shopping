@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lab_11_shopping/api/api.dart';
+import 'package:lab_11_shopping/api/shopping_list.dart';
 import 'package:lab_11_shopping/models/grocery_item_model.dart';
 import 'package:lab_11_shopping/widgets/new_item.dart';
 
@@ -91,7 +91,12 @@ class _GroceryListState extends State<GroceryList> {
         title: const Text('Your Groceries'),
         actions: [IconButton(onPressed: _addItem, icon: const Icon(Icons.add))],
       ),
-      body: content,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _getItems();
+        },
+        child: content,
+      ),
     );
   }
 }
